@@ -55,6 +55,7 @@ const Home: React.FC = () => {
   const [visionMission, setVisionMission] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Category | null>(null);
+  const [showAllProducts, setShowAllProducts] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -136,28 +137,33 @@ const Home: React.FC = () => {
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-             {/* Render 6 items. If categories.length < 6, we loop over it or mock them */}
-             {categories.length > 0 ? Array(6).fill(0).map((_, i) => {
-                const category = categories[i % categories.length];
-                return (
-                  <FadeIn key={i} delay={i * 0.1} direction="up" className="h-full">
-                    <div onClick={() => setSelectedProduct(category)} className="cursor-pointer h-full">
-                      <Card className="rounded-none border border-border shadow-none hover:border-primary transition-colors group flex items-center bg-white h-32">
-                        <div className="w-2/5 h-full bg-muted overflow-hidden">
-                            <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                        </div>
-                        <CardContent className="p-6 w-3/5 flex flex-col justify-center h-full">
-                          <h3 className="text-lg font-bold text-secondary mb-2 leading-tight">{category.name}</h3>
-                          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-primary flex items-center">
-                            View <ChevronRight className="ml-1 h-3 w-3" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </FadeIn>
-                );
-             }) : null}
+             {categories.length > 0 ? (
+               (showAllProducts ? categories : categories.slice(0, 6)).map((category, i) => (
+                 <FadeIn key={category.id} delay={i * 0.1} direction="up" className="h-full">
+                   <div onClick={() => setSelectedProduct(category)} className="cursor-pointer h-full">
+                     <Card className="rounded-none border border-border shadow-none hover:border-primary transition-colors group flex items-center bg-white h-32">
+                       <div className="w-2/5 h-full bg-muted overflow-hidden">
+                           <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                       </div>
+                       <CardContent className="p-6 w-3/5 flex flex-col justify-center h-full">
+                         <h3 className="text-lg font-bold text-secondary mb-2 leading-tight">{category.name}</h3>
+                         <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-primary flex items-center">
+                           View <ChevronRight className="ml-1 h-3 w-3" />
+                         </div>
+                       </CardContent>
+                     </Card>
+                   </div>
+                 </FadeIn>
+               ))
+             ) : null}
           </div>
+          {categories.length > 6 && !showAllProducts && (
+            <div className="flex justify-center mt-12">
+              <Button size="lg" onClick={() => setShowAllProducts(true)} className="rounded-none px-8 py-6 h-auto uppercase tracking-wider font-bold">
+                View More Products
+              </Button>
+            </div>
+          )}
         </div>
       </section>
       {/* About & Features Block */}
@@ -448,7 +454,7 @@ const Home: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-sm mb-1">Company Address</h4>
-                      <p className="text-xs text-muted-foreground leading-tight">Capital City, S.No. A7/2, Plot No. C-10 Opp. Mahindra & Mahindra Gate No.1 Talwade-Mahulunge Road, Village -Nighoje MIDC Chakan, Phase IV, Pune, Maharashtra 410501</p>
+                      <p className="text-xs text-muted-foreground leading-tight">Capital City, S.No. A7/2, Plot No. C-10 MIDC Chakan, Phase IV, Pune 410501, MH, India</p>
                     </div>
                  </div>
                </FadeIn>

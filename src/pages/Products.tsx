@@ -349,7 +349,7 @@ const Products: React.FC = () => {
               );
             })}
           </div>
-          {!showAllProducts && filteredProducts.length > 5 && (
+          {!showAllProducts && filteredProducts.length > 4 && (
             <div className="flex justify-center mt-12">
               <Button size="lg" onClick={() => setShowAllProducts(true)} className="rounded-none px-8 py-6 h-auto uppercase tracking-wider font-bold">
                 View More Products
