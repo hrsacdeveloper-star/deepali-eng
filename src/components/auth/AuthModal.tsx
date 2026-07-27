@@ -32,7 +32,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onOpenChange }) => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { data, error } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
           shouldCreateUser: true,
@@ -44,9 +44,23 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onOpenChange }) => {
           }
         }
       });
+
+      // Keep normalized email in state so verify uses the same value
+      setEmail(normalizedEmail);
+
+      // Helpful logging for diagnosing deployed behavior
+      // (viewable in browser console or reproduction logs)
+      // eslint-disable-next-line no-console
+      console.log('signInWithOtp response', { data, error });
+
       if (error) throw error;
+
       setOtpSent(true);
-      toast.success('A 6-digit verification code was sent to your email.');
+
+      // Some Supabase projects send a magic link instead of an OTP
+      // depending on dashboard settings (Email OTP enabled/disabled).
+      // We show a generic message to cover both cases.
+      toast.success('Check your email — you will receive a verification code or a sign-in link.');
     } catch (error: any) {
       console.error('OTP send failed:', error);
       toast.error(error?.message || 'Failed to send verification code. Please check your Supabase email OTP settings.');
