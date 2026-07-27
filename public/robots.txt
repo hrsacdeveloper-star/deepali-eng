@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /my-submissions
+
+Sitemap: https://www.deepaliengineering.com/sitemap.xml
