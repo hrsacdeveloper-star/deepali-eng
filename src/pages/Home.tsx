@@ -113,9 +113,9 @@ const Home: React.FC = () => {
         
         <div className="container relative z-10">
           <FadeIn direction="up" delay={0.2} className="max-w-2xl space-y-4 pt-20">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white uppercase">{"OIL INDUSTRY"}</h1>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white uppercase">{"Trusted Manufacturing"}</h1>
             <p className="text-lg text-white/80 max-w-xl">
-              Industry is ready to help you in making unique-looking and best website in a moment.
+              Building High-Performance Industrial Components with Precision, Innovation, and Reliability.
             </p>
             <div className="pt-6">
               <Button variant="ghost" className="border border-white/60 text-white hover:bg-white/10 hover:text-white rounded-none px-8 py-6 text-xs uppercase tracking-widest font-bold" asChild>

@@ -122,6 +122,41 @@ const ProductDetails: React.FC = () => {
     }
   };
 
+  const normalizeTechnicalParameters = (params: any) => {
+    if (!params) return null;
+
+    if (typeof params === 'object' && !Array.isArray(params)) {
+      return params;
+    }
+
+    if (typeof params === 'string') {
+      try {
+        const parsed = JSON.parse(params);
+        if (typeof parsed === 'object' && !Array.isArray(parsed)) {
+          return parsed;
+        }
+      } catch {
+        // ignore parse errors
+      }
+
+      const lines = params.split(/\r?\n|,|;/).map(line => line.trim()).filter(Boolean);
+      const result: Record<string, string> = {};
+      lines.forEach(line => {
+        const parts = line.split(/:\s*|=|\|/);
+        if (parts.length >= 2) {
+          const key = parts.shift()?.trim() ?? '';
+          const value = parts.join(':').trim();
+          if (key) result[key] = value;
+        }
+      });
+      return Object.keys(result).length ? result : { Details: params };
+    }
+
+    return { Details: String(params) };
+  };
+
+  const technicalParameters = normalizeTechnicalParameters(product?.technical_parameters);
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[60vh]">
@@ -142,11 +177,11 @@ const ProductDetails: React.FC = () => {
   return (
     <>
       <SEO 
-        title={`${product.name} | Deepali Engineering`}
-        description={product.full_description.substring(0, 160)}
-        url={`/products/${product.slug}`}
-        keywords={`${product.name}, Deepali Engineering, Precision Parts, Manufacturing`}
-        image={product.image_url}
+        title={`${product.name || 'Product'} | Deepali Engineering`}
+        description={(product.full_description || '').substring(0, 160)}
+        url={`/products/${product.slug || ''}`}
+        keywords={`${product.name || 'Product'}, Deepali Engineering, Precision Parts, Manufacturing`}
+        image={product.image_url || 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_0ac6928d-52fe-4918-9121-2deab1d9df49.jpg'}
       />
     <div className="flex flex-col w-full overflow-x-hidden">
       {/* Breadcrumb Area */}
@@ -171,11 +206,11 @@ const ProductDetails: React.FC = () => {
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Product Image */}
-            <div className="bg-muted/10 rounded-none p-4 aspect-square flex items-center justify-center relative overflow-hidden border">
+            <div className="rounded-none overflow-hidden border border-border bg-muted/10">
               <img 
                 src={product.image_url} 
                 alt={product.name} 
-                className="w-full h-full object-contain relative z-10" 
+                className="w-full h-[560px] sm:h-[620px] object-cover transition-transform duration-500 hover:scale-[1.03]"
               />
             </div>
 
@@ -196,16 +231,16 @@ const ProductDetails: React.FC = () => {
                 </div>
               )}
 
-              {product.technical_parameters && (
+              {technicalParameters && (
                  <div className="space-y-4">
                   <h3 className="text-xl font-bold text-foreground border-b pb-2">Technical Specifications</h3>
-                  <div className="w-full overflow-hidden rounded-md border">
+                  <div className="w-full overflow-hidden rounded-md border border-border">
                     <table className="w-full text-sm text-left">
-                      <tbody className="divide-y">
-                        {Object.entries(product.technical_parameters).map(([key, value], idx) => (
-                          <tr key={idx} className="hover:bg-muted/50">
-                            <th className="px-4 py-3 font-medium text-foreground bg-muted/30 w-1/3 whitespace-nowrap">{key}</th>
-                            <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{value as string}</td>
+                      <tbody className="divide-y divide-border">
+                        {Object.entries(technicalParameters).map(([key, value], idx) => (
+                          <tr key={idx} className="bg-white hover:bg-muted/50 transition-colors">
+                            <th className="px-4 py-4 font-semibold text-foreground bg-muted/10 w-1/3 align-top">{key}</th>
+                            <td className="px-4 py-4 text-muted-foreground">{String(value)}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -218,9 +253,15 @@ const ProductDetails: React.FC = () => {
                 <Button size="lg" onClick={handleRequiresAuth} asChild={!!session} className="rounded-none bg-secondary text-white hover:bg-secondary/90 uppercase tracking-widest text-xs font-bold">
                   {session ? <Link to="/request-quote">Request Quote</Link> : <span>Request Quote</span>}
                 </Button>
-                <Button size="lg" variant="outline" onClick={handleRequiresAuth} className="gap-2 rounded-none uppercase tracking-widest text-xs font-bold border-border">
-                  <Download className="h-4 w-4" />
-                  Download Catalogue
+                <Button size="lg" variant="outline" asChild className="gap-2 rounded-none uppercase tracking-widest text-xs font-bold border-border">
+                  <a 
+                    href="https://geowtajrlzxeyxdtjemh.supabase.co/storage/v1/object/public/pdf/INTRODUCTION%20FOR%20DEEPALI%20ENGINEERING%20CHAKAN%20PUNE.pdf" 
+                    target="_blank" 
+                    rel="noreferrer noopener"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download Catalogue
+                  </a>
                 </Button>
               </div>
             </div>

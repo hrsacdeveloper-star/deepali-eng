@@ -147,7 +147,7 @@ const Quality: React.FC = () => {
             </div>
             <div className="aspect-[4/3] bg-muted overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=2070&auto=format&fit=crop" 
+                src="/images/Smart Automation_ Opportunities And Improvements.jpg" 
                 alt="Quality assurance laboratory" 
                 className="w-full h-full object-cover" 
               />
@@ -227,7 +227,7 @@ const Quality: React.FC = () => {
                   </CardContent>
                 </Card>
                 <div className="aspect-[4/3] overflow-hidden bg-muted">
-                  <img src="https://images.unsplash.com/photo-1581092160562-40aa08e77037?q=80&w=2070&auto=format&fit=crop" alt="Testing Equipment" className="w-full h-full object-cover" />
+                  <img src="/images/main.png" alt="Testing Equipment" className="w-full h-full object-cover" />
                 </div>
               </div>
             </FadeIn>

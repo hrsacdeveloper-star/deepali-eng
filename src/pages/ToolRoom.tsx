@@ -56,7 +56,7 @@ const ToolRoom = () => {
     fetchMachines();
   }, []);
 
-  const types = ['All', ...Array.from(new Set(machines.map(m => m.type)))];
+  const types = ['All', ...Array.from(new Set(machines.map(m => m.type?.trim()).filter((type): type is string => !!type)))];
 
   const filteredMachines = machines.filter(m => {
     const matchesType = filter === 'All' || m.type === filter;
@@ -158,7 +158,7 @@ const ToolRoom = () => {
               {filteredMachines.length > 0 ? filteredMachines.map(m => (
                 <Card key={m.id} className="rounded-none border-border shadow-sm hover:shadow-md transition-all cursor-pointer hover:border-primary/50 flex flex-col overflow-hidden" onClick={() => setSelectedMachine(m)}>
                   <div className="h-48 w-full bg-muted border-b border-border">
-                    <img src={m.img} alt={m.name} className="w-full h-full object-cover" />
+                    <img src={m.img || m.image_url} alt={m.name} className="w-full h-full object-cover" />
                   </div>
                   <CardContent className="p-6 flex flex-col flex-1">
                     <div className="mb-3">
