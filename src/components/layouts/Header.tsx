@@ -32,11 +32,6 @@ const Header: React.FC = () => {
   
   if (user) {
     navLinks.push({ name: 'My Submissions', path: '/my-submissions' });
-    navLinks.push({ name: 'Product Admin', path: '/admin/products' });
-    navLinks.push({ name: 'Certificate Admin', path: '/admin/certificates' });
-    navLinks.push({ name: 'Partners Admin', path: '/admin/partners' });
-    navLinks.push({ name: 'Org Structure', path: '/admin/org-structure' });
-    navLinks.push({ name: 'Site Settings', path: '/admin/settings' });
   }
 
   const isActive = (path: string, dropdown?: {path: string}[]) => {

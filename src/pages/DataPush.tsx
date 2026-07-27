@@ -17,7 +17,7 @@ const DataPush = () => {
     setError(null);
 
     const { data, error: fetchError } = await supabase
-      .from<Todo>('todos')
+      .from('todos')
       .select('*')
       .order('id', { ascending: true });
 

@@ -27,12 +27,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onOpenChange }) => {
       toast.error('Please fill in all required fields');
       return;
     }
-    
+
+    const normalizedEmail = email.trim().toLowerCase();
+
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        email,
+        email: normalizedEmail,
         options: {
+          shouldCreateUser: true,
+          emailRedirectTo: window.location.origin,
           data: {
             name,
             designation,
@@ -42,9 +46,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onOpenChange }) => {
       });
       if (error) throw error;
       setOtpSent(true);
-      toast.success('Verification code sent to your email');
+      toast.success('A 6-digit verification code was sent to your email.');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to send verification code');
+      console.error('OTP send failed:', error);
+      toast.error(error?.message || 'Failed to send verification code. Please check your Supabase email OTP settings.');
     } finally {
       setLoading(false);
     }
@@ -87,6 +92,28 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onOpenChange }) => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) throw error;
+    } catch (error: any) {
+      console.error('Google sign-in failed:', error);
+      toast.error(error?.message || 'Google login failed. Please try again.');
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] rounded-none">
@@ -96,7 +123,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onOpenChange }) => {
           </DialogTitle>
           <DialogDescription>
             {otpSent 
-              ? `We sent a code to ${email}. Please enter it below.` 
+              ? `We sent a 6-digit verification code to ${email}. Please enter it below.` 
               : 'Please verify your details to download catalogues and request quotes.'}
           </DialogDescription>
         </DialogHeader>
@@ -153,6 +180,24 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onOpenChange }) => {
             <Button type="submit" className="w-full rounded-none bg-primary hover:bg-primary/90 uppercase tracking-widest text-xs font-bold" disabled={loading}>
               {loading ? 'Sending Code...' : 'Send Verification Code'}
             </Button>
+
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">or login</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                type="button"
+                className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-red-500 bg-white text-red-600 shadow-sm transition hover:bg-red-50"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                aria-label="Continue with Google"
+              >
+                <span className="text-xl font-black">G</span>
+              </button>
+            </div>
           </form>
         ) : (
           <form onSubmit={handleVerifyOTP} className="space-y-4 pt-4">

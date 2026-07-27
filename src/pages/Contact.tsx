@@ -42,6 +42,7 @@ const Contact: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const mapEmbedUrl = 'https://www.openstreetmap.org/export/embed.html?bbox=73.87%2C18.68%2C73.95%2C18.76&layer=mapnik&marker=18.72%2C73.91';
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -290,15 +291,28 @@ const Contact: React.FC = () => {
               </div>
               
               {/* Map Embed */}
-              <div className="aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted">
-                <iframe 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  style={{border: 0}} 
-                  src="https://www.google.com/maps/embed/v1/place?key=REDACTED&q=Deepali+Engineering,Pune"
-                  allowFullScreen
-                ></iframe>
+              <div className="space-y-3">
+                <div className="aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted border border-border">
+                  <iframe
+                    title="Deepali Engineering location"
+                    width="100%"
+                    height="100%"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    src={mapEmbedUrl}
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Deepali+Engineering+Chakan+Pune"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  Open in Google Maps
+                </a>
               </div>
             </FadeIn>
             
