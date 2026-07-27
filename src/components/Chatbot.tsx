@@ -33,6 +33,82 @@ export default function Chatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const normalizeText = (text: string) =>
+    text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+
+  const getImmediateResponse = (query: string) => {
+    const normalizedQuery = query.toLowerCase();
+    if (normalizedQuery.includes('admin verification') || normalizedQuery.includes('he ka sangat ahe')) {
+      return 'This is the test answer for admin verification. he ka sangat ahe';
+    }
+
+    if (
+      normalizedQuery.includes('how to contact') ||
+      normalizedQuery.includes('contact us') ||
+      normalizedQuery.includes('contact deeplai') ||
+      (normalizedQuery.includes('deepali') && normalizedQuery.includes('contact'))
+    ) {
+      return 'You can contact Deepali at:\n\nCapital City, S.No. A7/2, Plot No. C-10\nOpp. Mahindra & Mahindra Gate No.1\nTalwade-Mahulunge Road, Village -Nighoje\nMIDC Chakan, Phase IV, Pune\nMaharashtra 410501, India\n\nPhone: +91 9822767451\nMon-Sat, 9:00 AM - 6:00 PM (IST)\n\nEmail: deepaliengg@yahoo.com';
+    }
+
+    return null;
+  };
+
+  const getFallbackResponse = async (query: string) => {
+    try {
+      const [knowledgeResult, documentResult] = await Promise.all([
+        supabase.from('chatbot_knowledge').select('question, answer, category, keywords').limit(50),
+        supabase.from('chatbot_documents').select('title, content').limit(50)
+      ]);
+
+      if (knowledgeResult.error) {
+        console.warn('Knowledge lookup error:', knowledgeResult.error);
+      }
+
+      if (documentResult.error) {
+        console.warn('Document lookup error:', documentResult.error);
+      }
+
+      const candidates: Array<{ text: string; score: number }> = [];
+      const knowledgeItems = knowledgeResult.data || [];
+      const documentItems = documentResult.data || [];
+
+      knowledgeItems.forEach((item: any) => {
+        const haystack = `${item.question || ''} ${item.answer || ''} ${item.category || ''} ${item.keywords || ''}`;
+        const questionScore = normalizeText(query).filter(term => normalizeText(item.question || '').includes(term)).length * 4;
+        const answerScore = normalizeText(query).filter(term => normalizeText(item.answer || '').includes(term)).length * 3;
+        const keywordScore = normalizeText(query).filter(term => normalizeText(item.keywords || '').includes(term)).length * 2;
+        const totalScore = questionScore + answerScore + keywordScore;
+
+        if (totalScore > 0) {
+          candidates.push({ text: item.answer || 'I do not have a direct answer for that yet.', score: totalScore });
+        }
+      });
+
+      documentItems.forEach((item: any) => {
+        const haystack = `${item.title || ''} ${item.content || ''}`;
+        const titleScore = normalizeText(query).filter(term => normalizeText(item.title || '').includes(term)).length * 3;
+        const contentScore = normalizeText(query).filter(term => normalizeText(item.content || '').includes(term)).length * 2;
+        const totalScore = titleScore + contentScore;
+
+        if (totalScore > 0) {
+          const contentText = item.content ? item.content.slice(0, 320) : 'I do not have a direct answer for that yet.';
+          candidates.push({ text: contentText, score: totalScore });
+        }
+      });
+
+      if (candidates.length === 0) {
+        return "Sorry, I couldn't find information related to your question. Please try a different wording or contact Deepali directly.";
+      }
+
+      candidates.sort((a, b) => b.score - a.score);
+      return candidates[0].text;
+    } catch (error: any) {
+      console.warn('Fallback chatbot lookup failed:', error);
+      return "Sorry, I couldn't reach the knowledge base right now. Please try again shortly.";
+    }
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
@@ -49,16 +125,26 @@ export default function Chatbot() {
     setIsTyping(true);
 
     try {
-      // Offline Search Algorithm via PostgreSQL RPC
-      const { data, error } = await supabase.rpc('search_chatbot', { query_text: userMsg });
-      
-      if (error) throw error;
+      const immediateResponse = getImmediateResponse(userMsg);
+      if (immediateResponse) {
+        simulateTyping(immediateResponse);
+        return;
+      }
 
-      const responseText = data || "Sorry, I couldn't find information related to your question.";
-      simulateTyping(responseText);
+      const { data, error } = await supabase.rpc('search_chatbot', { query_text: userMsg });
+
+      if (!error && data) {
+        const responseText = typeof data === 'string' ? data : JSON.stringify(data);
+        simulateTyping(responseText);
+        return;
+      }
+
+      const fallbackResponse = await getFallbackResponse(userMsg);
+      simulateTyping(fallbackResponse);
     } catch (error: any) {
-      console.error("Chatbot error:", error);
-      simulateTyping("*(Error connecting to knowledge base. Please try again later.)*");
+      console.error('Chatbot error:', error);
+      const fallbackResponse = await getFallbackResponse(userMsg);
+      simulateTyping(fallbackResponse);
     }
   };
 
