@@ -207,7 +207,7 @@ const Products: React.FC = () => {
           </FadeIn>
           <FadeIn direction="left" className="w-full md:w-1/3 aspect-video md:aspect-auto md:h-[200px] relative shrink-0">
              <img
-               src="https://miaoda-edit-image.s3cdn.medo.dev/d2lgq5dxewap/IMG-d3c46wfpz01s.jpg"
+               src="https://geowtajrlzxeyxdtjemh.supabase.co/storage/v1/object/public/images/home.jpg"
                className="w-full h-full object-cover rounded-lg shadow-sm"
                alt="Products Overview"
                data-editor-config="%7B%22defaultSrc%22%3A%22https%3A%2F%2Fmiaoda-edit-image.s3cdn.medo.dev%2Fd2lgq5dxewap%2FIMG-d3c46wfpz01s.jpg%22%7D" />

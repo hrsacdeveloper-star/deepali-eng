@@ -3,4 +3,6 @@ Allow: /
 Disallow: /admin/
 Disallow: /my-submissions
 
+Host: www.deepaliengineering.com
 Sitemap: https://www.deepaliengineering.com/sitemap.xml
+Sitemap: https://deepaliengineering.com/sitemap.xml

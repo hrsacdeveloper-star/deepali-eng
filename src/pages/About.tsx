@@ -106,7 +106,7 @@ const About: React.FC = () => {
           <FadeIn direction="up">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 divide-x-0 md:divide-x divide-border">
               {[
-                { label: 'Years Experience', value: '25+' },
+                { label: 'Years Experience', value: '20+' },
                 { label: 'Global Clients', value: '500+' },
                 { label: 'Products', value: '1000+' },
                 { label: 'Certifications', value: 'ISO 9001' }

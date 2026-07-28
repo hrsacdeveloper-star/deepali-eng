@@ -97,7 +97,14 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <>
+      <SEO 
+        title="Deepali Engineering | Precision Engineering Components Manufacturer in Pune"
+        description="Deepali Engineering manufactures precision components, jigs & fixtures, machine spare parts, and custom industrial solutions for global sectors from Pune, India."
+        url="/"
+        keywords="Deepali Engineering, Precision Engineering Company Pune, Precision Components Manufacturer, Jigs and Fixtures, Machine Spare Parts"
+      />
+      <div className="flex flex-col w-full overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative h-[500px] md:h-[600px] flex items-center bg-secondary overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -113,9 +120,9 @@ const Home: React.FC = () => {
         
         <div className="container relative z-10">
           <FadeIn direction="up" delay={0.2} className="max-w-2xl space-y-4 pt-20">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white uppercase">{"Trusted Manufacturing"}</h1>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white uppercase">{"Deepali Engineering"}</h1>
             <p className="text-lg text-white/80 max-w-xl">
-              Building High-Performance Industrial Components with Precision, Innovation, and Reliability.
+              Precision-engineered industrial components and custom manufacturing solutions trusted across global sectors.
             </p>
             <div className="pt-6">
               <Button variant="ghost" className="border border-white/60 text-white hover:bg-white/10 hover:text-white rounded-none px-8 py-6 text-xs uppercase tracking-widest font-bold" asChild>
@@ -182,7 +189,7 @@ const Home: React.FC = () => {
                 </p>
              </div>
              <div className="aspect-[16/10] md:aspect-auto md:h-auto min-h-[300px] md:min-h-[500px] relative">
-                <img src="https://miaoda-site-img.s3cdn.medo.dev/images/KLing_0d8d4398-c58c-4a45-8669-e722ec34d8ca.jpg" className="w-full h-full object-cover" alt="Company Building" />
+                <img src="https://geowtajrlzxeyxdtjemh.supabase.co/storage/v1/object/public/images/main.png" className="w-full h-full object-cover" alt="Company Building" />
              </div>
           </div>
         </FadeIn>
@@ -222,7 +229,7 @@ const Home: React.FC = () => {
                             </div>
                             <div>
                                <h4 className="font-bold text-secondary text-sm">Experience</h4>
-                               <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">25 years of activity</p>
+                               <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">20 years of activity</p>
                             </div>
                          </CardContent>
                       </Card>
@@ -525,6 +532,7 @@ const Home: React.FC = () => {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 };
 

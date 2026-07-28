@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { MapPin, Briefcase, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FadeIn } from '@/components/ui/fade-in';
+import { SEO } from '@/components/seo/SEO';
 
 interface Job {
   id: string;
@@ -39,7 +40,14 @@ const Careers: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <>
+      <SEO 
+        title="Careers at Deepali Engineering | Join Our Precision Manufacturing Team"
+        description="Explore careers at Deepali Engineering and join a skilled team working on precision manufacturing, quality systems, and engineering excellence in Pune."
+        url="/careers"
+        keywords="Careers Deepali Engineering, Manufacturing Jobs Pune, Precision Engineering Careers, Quality Jobs, CNC Jobs"
+      />
+      <div className="flex flex-col w-full overflow-x-hidden">
       <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }} className="bg-muted py-16 md:py-24">
         <div className="container">
           <div className="max-w-3xl space-y-4">
@@ -130,6 +138,7 @@ const Careers: React.FC = () => {
         </div>
       </motion.section>
     </div>
+    </>
   );
 };
 

@@ -1,9 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo/SEO';
 
 const PrivacyPolicy: React.FC = () => {
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <>
+      <SEO 
+        title="Privacy Policy | Deepali Engineering"
+        description="Read Deepali Engineering's privacy policy to understand how we collect, use, and protect your personal information on our website."
+        url="/privacy-policy"
+        keywords="Privacy Policy Deepali Engineering, Data Protection, Customer Privacy"
+      />
+      <div className="flex flex-col w-full overflow-x-hidden">
       <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }} className="bg-muted py-16 md:py-24">
         <div className="container">
           <div className="max-w-3xl space-y-4">
@@ -65,6 +73,7 @@ const PrivacyPolicy: React.FC = () => {
         </div>
       </motion.section>
     </div>
+    </>
   );
 };
 

@@ -22,9 +22,9 @@ const Footer: React.FC = () => {
     <footer className="relative mt-auto bg-[#0a0a0a] text-white overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://miaoda-site-img.s3cdn.medo.dev/images/KLing_70a713d6-73bf-40a2-97f7-227d6344fae3.jpg" 
+          src="https://geowtajrlzxeyxdtjemh.supabase.co/storage/v1/object/public/images/footer.jpg" 
           alt="Footer background" 
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-40"
         />
       </div>
       <div className="container relative z-10 py-12 md:py-16">

@@ -26,7 +26,7 @@ export default function Chatbot() {
     "Tell me about Deepali",
     "What are your core products?",
     "Which industries do you serve?",
-    "Where are you located?"
+    "Who are your global partners?"
   ];
 
   const scrollToBottom = () => {
@@ -52,6 +52,42 @@ export default function Chatbot() {
     }
 
     return null;
+  };
+
+  const getGlobalPartnersResponse = async (query: string) => {
+    const normalizedQuery = query.toLowerCase();
+    const isPartnerQuery =
+      normalizedQuery.includes('global partner') ||
+      normalizedQuery.includes('global partners') ||
+      (normalizedQuery.includes('partner') && normalizedQuery.includes('global')) ||
+      normalizedQuery.includes('who are your partners') ||
+      normalizedQuery.includes('tell me your partners') ||
+      normalizedQuery.includes('your partners');
+
+    if (!isPartnerQuery) {
+      return null;
+    }
+
+    try {
+      const { data, error } = await supabase.from('global_partners').select('name').order('order_index');
+
+      if (error) {
+        throw error;
+      }
+
+      const partnerNames = (data || [])
+        .map((item: any) => item?.name)
+        .filter(Boolean);
+
+      if (partnerNames.length === 0) {
+        return 'We are proud to collaborate with several valued global partners across industries.';
+      }
+
+      return `Our global partners include: ${partnerNames.join(', ')}.`;
+    } catch (error: any) {
+      console.warn('Global partners lookup failed:', error);
+      return 'We are proud to work with several trusted global partners across industries.';
+    }
   };
 
   const getFallbackResponse = async (query: string) => {
@@ -128,6 +164,12 @@ export default function Chatbot() {
       const immediateResponse = getImmediateResponse(userMsg);
       if (immediateResponse) {
         simulateTyping(immediateResponse);
+        return;
+      }
+
+      const partnerResponse = await getGlobalPartnersResponse(userMsg);
+      if (partnerResponse) {
+        simulateTyping(partnerResponse);
         return;
       }
 

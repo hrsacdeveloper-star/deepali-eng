@@ -4,6 +4,7 @@ import { supabase } from '@/db/supabase';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { FadeIn } from '@/components/ui/fade-in';
+import { SEO } from '@/components/seo/SEO';
 
 interface GalleryImage {
   id: string;
@@ -44,7 +45,14 @@ const GalleryClients: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <>
+      <SEO 
+        title="Gallery & Clients | Deepali Engineering"
+        description="Explore Deepali Engineering's gallery and discover the global partners and clients who trust our precision engineering solutions."
+        url="/gallery-clients"
+        keywords="Deepali Engineering Gallery, Clients, Global Partners, Manufacturing Gallery"
+      />
+      <div className="flex flex-col w-full overflow-x-hidden">
       {/* Page Header */}
       <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }} className="bg-muted py-16 md:py-24">
         <div className="container">
@@ -151,6 +159,7 @@ const GalleryClients: React.FC = () => {
         </div>
       </motion.section>
     </div>
+    </>
   );
 };
 
